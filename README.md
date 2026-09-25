@@ -61,7 +61,7 @@ At the time of submission for the collaborative class project, the following fea
 * **Coordinate Helpers:** Quality-of-life tools to assist users in locating and designating exact coordinates on the canvas.
 
 ## Newly Added Features
-*Note: The future edits listed above have already been implemented by me independently. The initial version of ArtScript was a collaborative class project.*
+*Note: The items above were the original scope. Everything in 'Newly Added Features' below was implemented solely by me after the class submission.*
 
 ArtScript has been expanded with several powerful new features:
 * **Variables and Loops:** Added variable assignment (`set`) and standard `for` loops for generative patterns.
