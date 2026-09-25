@@ -53,6 +53,8 @@ Our primary primitives are commands which can be executed in order. The combinin
 * **Polygon (`poly fill color coords`)**: Draw a polygon with the specified fill color and stroke color using the provided list of coordinates.
 
 ## Future Work
+*Note: While the initial version of ArtScript was a collaborative class project, the future expansions listed below are being planned and developed independently by Andrew.*
+
 While ArtScript provides a solid foundation for programmatic geometric drawing, several features are planned for future development:
 * **Variables and Loops:** Adding variable assignment, standard `for` loops, and recursion trees.
 * **Text Support:** The ability to render text directly onto the canvas.
