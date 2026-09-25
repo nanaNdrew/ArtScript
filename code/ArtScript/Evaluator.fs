@@ -55,6 +55,17 @@ let rec evalCommand (command: Command)(state:State): string * State =
             svgOutput <- svgOutput + loopOutput
             currState <- nextState
         svgOutput, currState
+    | G_Rotate(angleExpr, commands), _ ->
+        let angle = evalExpr angleExpr state.env
+        let innerOutput, nextState = evalDraw commands state
+        let groupSvg = "<g transform=\"rotate(" + (angle |> string) + ")\">\n" + innerOutput + "</g>\n"
+        groupSvg, nextState
+    | G_Scale(sxExpr, syExpr, commands), _ ->
+        let sx = evalExpr sxExpr state.env
+        let sy = evalExpr syExpr state.env
+        let innerOutput, nextState = evalDraw commands state
+        let groupSvg = "<g transform=\"scale(" + (sx |> string) + "," + (sy |> string) + ")\">\n" + innerOutput + "</g>\n"
+        groupSvg, nextState
     | Forward(lenExpr, color), { position = start; direction = dir; pen_up = false}
             ->  let len = evalExpr lenExpr state.env
                 let end_point =

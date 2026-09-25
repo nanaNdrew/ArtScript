@@ -144,11 +144,25 @@ let forLoop =
          (fun (v, (e1, e2, cmds)) -> ForLoop(v, e1, e2, cmds))
          |>> (fun cmd -> [cmd]) <!> "forLoop"
 
+let protate =
+    pseq (pright (pad (pstr "rotate")) (pad pintexpr))
+         (pbetween (pad (pchar '(')) expr (pad (pchar ')')))
+         (fun (angle, cmds) -> G_Rotate(angle, cmds))
+         |>> (fun cmd -> [cmd]) <!> "rotate"
+
+let pscale =
+    pseq (pright (pad (pstr "scale")) (pseq (pad pintexpr) (pad pintexpr) (fun (x,y) -> x,y)))
+         (pbetween (pad (pchar '(')) expr (pad (pchar ')')))
+         (fun ((sx, sy), cmds) -> G_Scale(sx, sy, cmds))
+         |>> (fun cmd -> [cmd]) <!> "scale"
+
 exprRef.Value <-
     pmany1 (
         (pcommand |>> (fun c -> [c])) <|>
         repeat <|>
-        forLoop
+        forLoop <|>
+        protate <|>
+        pscale
     ) |>> List.concat
 
 let grammar = pleft expr peof <!> "grammar"

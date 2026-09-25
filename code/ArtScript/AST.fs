@@ -48,6 +48,8 @@ type Command =
 | Assign of string * IntExpr
 | ForLoop of string * IntExpr * IntExpr * Command list
 | DrawText of string * IntExpr * Color
+| G_Rotate of IntExpr * Command list
+| G_Scale of IntExpr * IntExpr * Command list
 
 type Drawing = Command list
 

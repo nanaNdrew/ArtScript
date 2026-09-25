@@ -1,0 +1,8 @@
+rotate 45 (
+  setlocation 100 100
+  rect 50 50 blue red
+)
+scale 2 2 (
+  setlocation 50 50
+  circle 10 green black
+)
