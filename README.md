@@ -1,5 +1,7 @@
 # ArtScript
 
+*Built by Andrew Ansah and Henok Misgina Fisseha for CSCI 334, Williams College.*
+
 ## Introduction
 ArtScript is designed specifically for creating geometrically intricate artwork, particularly focusing on the use of polygons and points on a coordinate plane. ArtScript blends the elegance of mathematical shapes with the creative expression of visual art. ArtScript provides built-in functions for drawing basic shapes like lines, circles, and polygons, and empowers artists to encapsulate complex patterns into reusable functions. It’s a playground for those who want to explore the beauty of geometry through code.
 
@@ -49,6 +51,14 @@ Our primary primitives are commands which can be executed in order. The combinin
 * **Rect (`rect w l fill color`)**: Draw a rectangle at the current pen position with the specified width, height, fill color, and stroke color.
 * **Circle (`circle r fill color`)**: Draw a circle at the current pen position with the specified radius, fill color, and stroke color.
 * **Polygon (`poly fill color coords`)**: Draw a polygon with the specified fill color and stroke color using the provided list of coordinates.
+
+## Future Work
+While ArtScript provides a solid foundation for programmatic geometric drawing, several features are planned for future development:
+* **Variables and Loops:** Adding variable assignment, standard `for` loops, and recursion trees.
+* **Text Support:** The ability to render text directly onto the canvas.
+* **Additional Shapes:** Support for drawing ellipses and other complex geometries.
+* **Transformations:** Functionality to mirror, rotate, and scale drawn shapes.
+* **Coordinate Helpers:** Quality-of-life tools to assist users in locating and designating exact coordinates on the canvas.
 
 ## Examples and Running the Code
 
