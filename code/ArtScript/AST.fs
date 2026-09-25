@@ -50,6 +50,7 @@ type Command =
 | DrawText of string * IntExpr * Color
 | G_Rotate of IntExpr * Command list
 | G_Scale of IntExpr * IntExpr * Command list
+| Grid of IntExpr
 
 type Drawing = Command list
 

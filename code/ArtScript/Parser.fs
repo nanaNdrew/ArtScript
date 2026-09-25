@@ -117,6 +117,7 @@ let pcommand =
                             (pseq (pad pintexpr) (pad color) (fun (s, c) -> s, c))
                             (fun (txt, (s, c)) -> txt, s, c))
                         |>> (fun (txt, s, c) -> DrawText(txt, s, c))) <|>
+        (pright (pad (pstr "grid")) (pad pintexpr) |>> (fun spacing -> Grid(spacing))) <|>
         (pad (pstr "penup") |>> (fun _ -> Penup)) <|>
         (pad (pstr "pendown") |>> (fun _ -> Pendown)) <!> "pcommand"
 

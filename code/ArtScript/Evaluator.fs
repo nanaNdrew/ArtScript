@@ -66,6 +66,17 @@ let rec evalCommand (command: Command)(state:State): string * State =
         let innerOutput, nextState = evalDraw commands state
         let groupSvg = "<g transform=\"scale(" + (sx |> string) + "," + (sy |> string) + ")\">\n" + innerOutput + "</g>\n"
         groupSvg, nextState
+    | Grid(spaceExpr), _ ->
+        let spacing = evalExpr spaceExpr state.env
+        let mutable gridSvg = ""
+        if spacing > 0 then
+            for x in 0 .. spacing .. CANVAS_SZ do
+                gridSvg <- gridSvg + "<line x1=\"" + (x |> string) + "\" y1=\"0\" x2=\"" + (x |> string) + "\" y2=\"" + (CANVAS_SZ |> string) + "\" style=\"stroke:rgb(200,200,200);stroke-width:1;stroke-dasharray:5,5\" />\n"
+                gridSvg <- gridSvg + "<text x=\"" + (x |> string) + "\" y=\"15\" font-size=\"10\" fill=\"rgb(150,150,150)\">" + (x |> string) + "</text>\n"
+            for y in 0 .. spacing .. CANVAS_SZ do
+                gridSvg <- gridSvg + "<line x1=\"0\" y1=\"" + (y |> string) + "\" x2=\"" + (CANVAS_SZ |> string) + "\" y2=\"" + (y |> string) + "\" style=\"stroke:rgb(200,200,200);stroke-width:1;stroke-dasharray:5,5\" />\n"
+                gridSvg <- gridSvg + "<text x=\"0\" y=\"" + (y |> string) + "\" font-size=\"10\" fill=\"rgb(150,150,150)\">" + (y |> string) + "</text>\n"
+        gridSvg, state
     | Forward(lenExpr, color), { position = start; direction = dir; pen_up = false}
             ->  let len = evalExpr lenExpr state.env
                 let end_point =

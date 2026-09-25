@@ -52,15 +52,15 @@ Our primary primitives are commands which can be executed in order. The combinin
 * **Circle (`circle r fill color`)**: Draw a circle at the current pen position with the specified radius, fill color, and stroke color.
 * **Polygon (`poly fill color coords`)**: Draw a polygon with the specified fill color and stroke color using the provided list of coordinates.
 
-## Future Work
-*Note: While the initial version of ArtScript was a collaborative class project, the future expansions listed below are being planned and developed independently by Andrew.*
+## Newly Added Features
+*Note: The future edits listed below have already been implemented by me independently. The initial version of ArtScript was a collaborative class project.*
 
-While ArtScript provides a solid foundation for programmatic geometric drawing, several features are planned for future development:
-* **Variables and Loops:** Adding variable assignment, standard `for` loops, and recursion trees.
-* **Text Support:** The ability to render text directly onto the canvas.
-* **Additional Shapes:** Support for drawing ellipses and other complex geometries.
-* **Transformations:** Functionality to mirror, rotate, and scale drawn shapes.
-* **Coordinate Helpers:** Quality-of-life tools to assist users in locating and designating exact coordinates on the canvas.
+ArtScript has been expanded with several powerful new features:
+* **Variables and Loops:** Added variable assignment (`set`) and standard `for` loops for generative patterns.
+* **Text Support:** Added the ability to render text directly onto the canvas (`text`).
+* **Additional Shapes:** Added support for drawing ellipses (`ellipse`).
+* **Transformations:** Added block-level functionality to mirror, rotate, and scale drawn shapes (`rotate`, `scale`).
+* **Coordinate Helpers:** Added a `grid` tool to assist users in locating and designating exact coordinates on the canvas.
 
 ## Examples and Running the Code
 

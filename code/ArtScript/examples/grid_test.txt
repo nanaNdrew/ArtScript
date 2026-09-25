@@ -1,0 +1,3 @@
+grid 100
+setlocation 100 100
+circle 20 red black
