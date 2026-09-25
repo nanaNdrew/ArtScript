@@ -9,6 +9,8 @@ let n = pmany1 pdigit |>> (fun digits -> stringify digits |> int)
 
 let pvar = pmany1 pletter |>> stringify
 
+let pquotedstring = pbetween (pchar '"') (pmany0 (psat (fun c -> c <> '"')) |>> stringify) (pchar '"')
+
 let pintexpr, pintexprRef = recparser()
 
 let pnum = n |>> Num
@@ -103,6 +105,11 @@ let pcommand =
         (pright (pad (pstr "set"))
                         (pseq (pad pvar) (pad pintexpr) (fun (v, e) -> v, e))
                         |>> (fun (v, e) -> Assign(v, e))) <|>
+        (pright (pad (pstr "text"))
+                        (pseq (pad pquotedstring)
+                            (pseq (pad pintexpr) (pad color) (fun (s, c) -> s, c))
+                            (fun (txt, (s, c)) -> txt, s, c))
+                        |>> (fun (txt, s, c) -> DrawText(txt, s, c))) <|>
         (pad (pstr "penup") |>> (fun _ -> Penup)) <|>
         (pad (pstr "pendown") |>> (fun _ -> Pendown)) <!> "pcommand"
 

@@ -46,6 +46,7 @@ type Command =
 | Polygon of Color * Color * (IntExpr * IntExpr) list
 | Assign of string * IntExpr
 | ForLoop of string * IntExpr * IntExpr * Command list
+| DrawText of string * IntExpr * Color
 
 type Drawing = Command list
 

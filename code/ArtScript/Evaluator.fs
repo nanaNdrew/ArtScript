@@ -71,6 +71,14 @@ let rec evalCommand (command: Command)(state:State): string * State =
                                     (evalColor color) + ";stroke-width:2\" />\n"
 
                 line, {state with position = end_point}
+    | DrawText(txt, sizeExpr, color), { position = start; direction = _; pen_up = false}
+           -> let size = evalExpr sizeExpr state.env
+              let textSvg = "<text x=\"" +  ((start.x) |> string) + "\"" +
+                                 " y=\"" +       (start.y |> string) + "\"" +
+                                 " font-size=\"" + (size |> string) + "\"" +
+                                 " fill=\"" +   (evalColor color) + "\"" +
+                                 ">" + txt + "</text>\n"
+              textSvg, state
     | Rect(wExpr, lExpr, fill, color), { position = start; direction = _; pen_up = false}
            -> let w = evalExpr wExpr state.env
               let l = evalExpr lExpr state.env
