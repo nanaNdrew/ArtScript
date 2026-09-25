@@ -260,3 +260,6 @@ MyProject_coverage.xml
 # latex
 *.aux
 *.out
+
+# macOS
+.DS_Store
