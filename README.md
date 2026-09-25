@@ -65,6 +65,10 @@ This evaluates the commands in the text file and outputs the generated image in 
 
 Here are some examples of what can be generated with ArtScript:
 
+**WCMA Artwork Recreation**
+![Josef Albers Artwork Recreation](docs/image.png)
+*A recreation of a Josef Albers artwork found at the Williams College Museum of Art (WCMA) using ArtScript.*
+
 **Bunny**
 ![Bunny](docs/bunny.png)
 
@@ -77,6 +81,4 @@ Here are some examples of what can be generated with ArtScript:
 **Circle**
 ![Circle](docs/circle.png)
 
-**WCMA Artwork Recreation**
-![Josef Albers Artwork Recreation](docs/image.png)
-*A recreation of a Josef Albers artwork found at the Williams College Museum of Art (WCMA) using ArtScript.*
+
