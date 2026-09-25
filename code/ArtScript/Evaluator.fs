@@ -99,6 +99,17 @@ let rec evalCommand (command: Command)(state:State): string * State =
                                  " stroke=\"" +  (evalColor color) + "\"" +
                                  " stroke-width =\"2\" />\n"  
               circ, state
+    | Ellipse(rxExpr, ryExpr, fill, color), { position = start; direction = _; pen_up = false}
+           -> let rx = evalExpr rxExpr state.env
+              let ry = evalExpr ryExpr state.env
+              let elSvg = "<ellipse cx=\"" +  ((start.x) |> string) + "\"" +
+                                 " cy=\"" +       (start.y |> string) + "\"" +
+                                 " rx=\"" +   (rx |> string) + "\"" +
+                                 " ry=\"" +   (ry |> string) + "\"" +
+                                 " fill =\"" +   (evalColor fill) + "\"" +
+                                 " stroke=\"" +  (evalColor color) + "\"" +
+                                 " stroke-width =\"2\" />\n"  
+              elSvg, state
     | Polygon(fill, color, coords), { position = start; direction = _; pen_up = false}
            -> let evalCoords = coords |> List.map (fun (cx, cy) -> (evalExpr cx state.env, evalExpr cy state.env))
               let poly = "<polygon fill =\"" +   (evalColor fill) + "\"" +

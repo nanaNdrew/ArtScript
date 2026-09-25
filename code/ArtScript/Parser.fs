@@ -94,6 +94,13 @@ let pcommand =
                                 (pseq (pad color) (pad color) (fun (fill, color) -> fill, color))
                                 (fun (l,(fill,color)) -> l, fill, color))                 
                         |>> (fun (r, fill, color) -> Circle(r, fill, color)))<|>
+        (pright (pstr "ellipse")
+                        (pseq (pad pintexpr)
+                                (pseq (pad pintexpr)
+                                        (pseq (pad color) (pad color) (fun (fill, color) -> fill, color))
+                                        (fun (ry,(fill,color)) -> ry, fill, color))
+                                (fun (rx,(ry,fill,color)) -> rx, ry, fill, color))
+                        |>> (fun (rx, ry, fill, color) -> Ellipse(rx, ry, fill, color)))<|>
         (pright (pstr "poly")
                         (pseq
                             (pseq (pad color) (pad color) (fun (fill, color) -> fill, color))

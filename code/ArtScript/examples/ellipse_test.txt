@@ -1,0 +1,2 @@
+setlocation 500 500
+ellipse 100 50 green purple

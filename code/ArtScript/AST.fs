@@ -43,6 +43,7 @@ type Command =
 | Pendown
 | Rect of IntExpr * IntExpr * Color * Color
 | Circle of IntExpr * Color * Color
+| Ellipse of IntExpr * IntExpr * Color * Color
 | Polygon of Color * Color * (IntExpr * IntExpr) list
 | Assign of string * IntExpr
 | ForLoop of string * IntExpr * IntExpr * Command list
