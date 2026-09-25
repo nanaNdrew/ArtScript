@@ -78,19 +78,45 @@ This evaluates the commands in the text file and outputs the generated image in 
 Here are some examples of what can be generated with ArtScript:
 
 **WCMA Artwork Recreation**
+
 ![Josef Albers Artwork Recreation](docs/image.png)
+
 *A recreation of a Josef Albers artwork found at the Williams College Museum of Art (WCMA) using ArtScript.*
 
 **Bunny**
+
 ![Bunny](docs/bunny.png)
 
 **Repeating Lines Pattern**
+
 ![Repeating Pattern](docs/repeating.png)
 
 **Rectangle**
+
 ![Rectangle](docs/rect.png)
 
 **Circle**
+
 ![Circle](docs/circle.png)
+
+**Variables and Loops**
+
+![Loop Test](docs/loop_test.svg)
+
+**Text Support**
+
+![Text Test](docs/text_test.svg)
+
+**Additional Shapes (Ellipse)**
+
+![Ellipse Test](docs/ellipse_test.svg)
+
+**Transformations**
+
+![Transform Test](docs/transform_test.svg)
+
+**Coordinate Helpers (Grid)**
+
+![Grid Test](docs/grid_test.svg)
 
 
