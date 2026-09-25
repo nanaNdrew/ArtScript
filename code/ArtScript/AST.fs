@@ -25,22 +25,31 @@ type Direction =
 | West
 
 
+type IntExpr =
+| Num of int
+| Var of string
+| Add of IntExpr * IntExpr
+| Sub of IntExpr * IntExpr
+| Mul of IntExpr * IntExpr
+| Div of IntExpr * IntExpr
+
 type Command =
-| Forward of int*Color
-| SetLocation of int*int
+| Forward of IntExpr * Color
+| SetLocation of IntExpr * IntExpr
 | TurnRight
 | TurnLeft
-| Shift of int*Direction
+| Shift of IntExpr * Direction
 | Penup
 | Pendown
-| Rect of int*int*Color*Color
-| Circle of int*Color*Color
-| Polygon of  Color * Color * (int*int)list
-
+| Rect of IntExpr * IntExpr * Color * Color
+| Circle of IntExpr * Color * Color
+| Polygon of Color * Color * (IntExpr * IntExpr) list
+| Assign of string * IntExpr
+| ForLoop of string * IntExpr * IntExpr * Command list
 
 type Drawing = Command list
 
-type State = {position: Coordinate; direction: Direction; pen_up: bool}
+type State = { position: Coordinate; direction: Direction; pen_up: bool; env: Map<string, int> }
 
 
 let CANVAS_SZ = 1000

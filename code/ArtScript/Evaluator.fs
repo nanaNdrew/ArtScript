@@ -20,19 +20,44 @@ let evalColor (color: Color) : string =
                                             + (y|> string) + "," 
                                             + (z|> string) + ")"
 
+let rec evalExpr (expr: IntExpr) (env: Map<string, int>) : int =
+    match expr with
+    | Num n -> n
+    | Var x -> 
+        match Map.tryFind x env with
+        | Some v -> v
+        | None -> 0
+    | Add(e1, e2) -> evalExpr e1 env + evalExpr e2 env
+    | Sub(e1, e2) -> evalExpr e1 env - evalExpr e2 env
+    | Mul(e1, e2) -> evalExpr e1 env * evalExpr e2 env
+    | Div(e1, e2) -> 
+        let denom = evalExpr e2 env
+        if denom = 0 then 0 else evalExpr e1 env / denom
+
 let rec polygoner (coordinates:(int*int) list) = 
                   match coordinates with
                   | [] -> ""
                   | (x, y)::xs -> (x |> string) + "," + (y|> string) + "  " + polygoner xs
 
-// consider reaching canvas edge case
-
-
-
 let rec evalCommand (command: Command)(state:State): string * State =
     match command, state with
-    |Forward(len, color), { position = start; direction = dir; pen_up = false}
-            ->  let end_point =
+    | Assign(varName, expr), _ ->
+        let value = evalExpr expr state.env
+        "", { state with env = Map.add varName value state.env }
+    | ForLoop(varName, startExpr, endExpr, commands), _ ->
+        let startVal = evalExpr startExpr state.env
+        let endVal = evalExpr endExpr state.env
+        let mutable currState = state
+        let mutable svgOutput = ""
+        for i in startVal .. endVal do
+            currState <- { currState with env = Map.add varName i currState.env }
+            let loopOutput, nextState = evalDraw commands currState
+            svgOutput <- svgOutput + loopOutput
+            currState <- nextState
+        svgOutput, currState
+    | Forward(lenExpr, color), { position = start; direction = dir; pen_up = false}
+            ->  let len = evalExpr lenExpr state.env
+                let end_point =
                     match dir with
                     | North -> {start with y = start.y - len}
                     | South -> {start with y = start.y + len}
@@ -46,8 +71,10 @@ let rec evalCommand (command: Command)(state:State): string * State =
                                     (evalColor color) + ";stroke-width:2\" />\n"
 
                 line, {state with position = end_point}
-    |Rect(w, l, fill, color), { position = start; direction = _; pen_up = false}
-           -> let rect = "<rect x=\"" +  ((start.x) |> string) + "\"" +
+    | Rect(wExpr, lExpr, fill, color), { position = start; direction = _; pen_up = false}
+           -> let w = evalExpr wExpr state.env
+              let l = evalExpr lExpr state.env
+              let rect = "<rect x=\"" +  ((start.x) |> string) + "\"" +
                                  " y=\"" +       (start.y |> string) + "\"" +
                                  " width=\"" +   (w |> string) + "\"" +
                                  " height =\"" + (l |> string) + "\"" +
@@ -55,32 +82,35 @@ let rec evalCommand (command: Command)(state:State): string * State =
                                  " stroke=\"" +  (evalColor color) + "\"" +
                                  " stroke-width =\"2\" />\n"  
               rect, state
-    |Circle(r, fill, color), { position = start; direction = _; pen_up = false}
-           -> let circ = "<circle cx=\"" +  ((start.x) |> string) + "\"" +
+    | Circle(rExpr, fill, color), { position = start; direction = _; pen_up = false}
+           -> let r = evalExpr rExpr state.env
+              let circ = "<circle cx=\"" +  ((start.x) |> string) + "\"" +
                                  " cy=\"" +       (start.y |> string) + "\"" +
                                  " r=\"" +   (r |> string) + "\"" +
                                  " fill =\"" +   (evalColor fill) + "\"" +
                                  " stroke=\"" +  (evalColor color) + "\"" +
                                  " stroke-width =\"2\" />\n"  
               circ, state
-    |Polygon(fill, color, coords), { position = start; direction = _; pen_up = false}
-           -> let poly = "<polygon fill =\"" +   (evalColor fill) + "\"" +
+    | Polygon(fill, color, coords), { position = start; direction = _; pen_up = false}
+           -> let evalCoords = coords |> List.map (fun (cx, cy) -> (evalExpr cx state.env, evalExpr cy state.env))
+              let poly = "<polygon fill =\"" +   (evalColor fill) + "\"" +
                                  " stroke=\"" +  (evalColor color) + "\"" +
                                  " points=\" " +
-                                 (polygoner coords) +
+                                 (polygoner evalCoords) +
                                  "\"" +
                                  " stroke-width =\"2\" />\n"
               poly, state
-
-    |Penup, { position = _; direction = _; pen_up = x}
+    | Penup, { position = _; direction = _; pen_up = x}
             -> "", {state with pen_up = true}
-
-    |Pendown, { position = _; direction = _; pen_up = x}
+    | Pendown, { position = _; direction = _; pen_up = x}
             -> "", {state with pen_up = false}
-    |SetLocation(x_loc, y_loc), { position = _; direction = _; pen_up =_}
-            -> "", {state with position = {x = x_loc; y = y_loc}}
-    |Shift(len,dir), {position = start; direction = _; pen_up =_}
-            ->  let new_position =
+    | SetLocation(xExpr, yExpr), { position = _; direction = _; pen_up =_}
+            -> let x_loc = evalExpr xExpr state.env
+               let y_loc = evalExpr yExpr state.env
+               "", {state with position = {x = x_loc; y = y_loc}}
+    | Shift(lenExpr,dir), {position = start; direction = _; pen_up =_}
+            ->  let len = evalExpr lenExpr state.env
+                let new_position =
                     match dir with
                     | North -> {start with y = start.y - len}
                     | South -> {start with y = start.y + len}
@@ -89,8 +119,9 @@ let rec evalCommand (command: Command)(state:State): string * State =
 
                 "", {state with position = new_position}
 
-    |Forward(len, _), { position = start; direction = dir; pen_up = true}
-            ->  let end_point =
+    | Forward(lenExpr, _), { position = start; direction = dir; pen_up = true}
+            ->  let len = evalExpr lenExpr state.env
+                let end_point =
                     match dir with
                     | North -> {start with y = start.y - len}
                     | South -> {start with y = start.y + len}
@@ -99,7 +130,7 @@ let rec evalCommand (command: Command)(state:State): string * State =
 
                 "", {state with position = end_point}
     
-    |TurnLeft, { position = _ ; direction = dir; pen_up = _}
+    | TurnLeft, { position = _ ; direction = dir; pen_up = _}
             ->  let new_direction =
                     match dir with
                     | North -> West
@@ -109,7 +140,7 @@ let rec evalCommand (command: Command)(state:State): string * State =
 
                 "", {state with direction = new_direction}
                     
-    |TurnRight, { position = _ ; direction = dir; pen_up = _}
+    | TurnRight, { position = _ ; direction = dir; pen_up = _}
             ->  let new_direction =
                     match dir with
                     | North -> East
@@ -118,10 +149,9 @@ let rec evalCommand (command: Command)(state:State): string * State =
                     | West -> North
 
                 "", {state with direction = new_direction}
-     |_,_ -> "", state //in cases like trying to draw the rectange when the pen is up.
-                    
+    | _,_ -> "", state 
 
-let rec evalDraw (drawing: Drawing)(state:State) =
+and evalDraw (drawing: Drawing)(state:State) =
     match drawing with
     | [] -> "", state
     | d::ds -> let line, curr_state = (evalCommand d state) 
@@ -129,11 +159,10 @@ let rec evalDraw (drawing: Drawing)(state:State) =
                (line + next_drawing), next_state
 
 let eval (drawing: Drawing) : string =
-    let start_state = { position = origin; direction = North; pen_up = false}
+    let start_state = { position = origin; direction = North; pen_up = false; env = Map.empty }
     let csz = CANVAS_SZ |> string
     "<svg width=\"" + csz + "\" height=\"" + csz + "\"" +
     " xmlns=\"http://www.w3.org/2000/svg\"" +
     " xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n" +
-    ((evalDraw drawing start_state) |> (fun (x, y) -> x)) //curr_change
+    ((evalDraw drawing start_state) |> (fun (x, y) -> x))
     + "</svg>\n"
-              

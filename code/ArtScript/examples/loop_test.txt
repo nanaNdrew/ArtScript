@@ -1,0 +1,7 @@
+setlocation 500 500
+set length 10
+for i 1 20 (
+  go length red
+  toright
+  set length (length + 10)
+)
