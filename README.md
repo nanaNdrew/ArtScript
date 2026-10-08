@@ -3,8 +3,11 @@
 
 Built by Andrew Ansah and Henok Misgina Fisseha for CSCI 334, Williams College.
 
-![Josef Albers Artwork Recreation](docs/image.png)
-*A recreation of a Josef Albers artwork found at the Williams College Museum of Art (WCMA) using ArtScript.*
+<p align="center">
+  <img src="docs/image.png" alt="Josef Albers Artwork Recreation" />
+  <br />
+  <em>A recreation of a Josef Albers artwork found at the Williams College Museum of Art (WCMA) using ArtScript.</em>
+</p>
 
 ## Problem and Approach
 ArtScript was designed to blend the elegance of mathematical shapes with the creative expression of visual art. Inspired by the minimalist, geometric artwork at the Williams College Museum of Art, we wanted to create an accessible platform for beginners, kids, and aspiring artists to explore the fundamentals of coding while unleashing their creativity. 
@@ -53,8 +56,6 @@ The initial scope of the class project focused purely on static turtle-graphics 
 
 ### More Examples Showcase
 
-<details>
-<summary>Click to view more ArtScript creations</summary>
 
 **Bunny**
 ![Bunny](docs/bunny.png)
@@ -74,4 +75,3 @@ The initial scope of the class project focused purely on static turtle-graphics 
 **Transformations**
 ![Transform Test](docs/transform_test.svg)
 
-</details>
