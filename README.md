@@ -1,21 +1,35 @@
 # ArtScript
+*A specialized programming language for creating geometrically intricate, SVG-based artwork.*
 
-*Built by Andrew Ansah and Henok Misgina Fisseha for CSCI 334, Williams College.*
+Built by Andrew Ansah and Henok Misgina Fisseha for CSCI 334, Williams College.
 
-## Introduction
-ArtScript is designed specifically for creating geometrically intricate artwork, particularly focusing on the use of polygons and points on a coordinate plane. ArtScript blends the elegance of mathematical shapes with the creative expression of visual art. ArtScript provides built-in functions for drawing basic shapes like lines, circles, and polygons, and empowers artists to encapsulate complex patterns into reusable functions. It’s a playground for those who want to explore the beauty of geometry through code.
+![Josef Albers Artwork Recreation](docs/image.png)
+*A recreation of a Josef Albers artwork found at the Williams College Museum of Art (WCMA) using ArtScript.*
 
-ArtScript serves as an excellent introduction to programming for aspiring artists and kids, offering a simplified syntax and intuitive commands for creating visually stunning geometric art and generative patterns. Its accessibility and ease of learning make it an ideal platform for beginners to explore the fundamentals of coding while unleashing their creativity through digital art. ArtScript will also encourage original artwork creation by users.
+## Problem and Approach
+ArtScript was designed to blend the elegance of mathematical shapes with the creative expression of visual art. Inspired by the minimalist, geometric artwork at the Williams College Museum of Art, we wanted to create an accessible platform for beginners, kids, and aspiring artists to explore the fundamentals of coding while unleashing their creativity. 
 
-## Design Principles
-ArtScript draws inspiration from the elegant simplicity and geometric artwork found in the Williams College Museum of Art. Inspired by these aesthetic principles, ArtScript is designed to replicate and extend upon these artistic styles through a programming language tailored for creating visually captivating geometric art and patterns. By providing intuitive commands and support for iterative patterns, ArtScript empowers artists to explore and express their creativity in the digital realm. We hope to be able to create crude replications of some of the artwork in the museum. The design is mainly based on using a pen to draw geometric shapes. ArtScript encourages freestyling with art, and multiple renderings or similar renderings of an artwork can be easily achieved through its combined forms.
+Our approach was to build a custom Domain-Specific Language (DSL) that simulates a pen drawing with mathematical precision. Users interact with a concise set of core commands (like `go`, `setlocation`, `toright`) and powerful combining forms (like the `repeat` block, bounded loops, and grouped shapes) to generate complex, generative patterns with minimal code.
 
-## Language Concepts
-ArtScript is a specialized programming language designed to simulate drawing with a pen with mathematical precision. Users interact with ArtScript through a set of 10 core commands: Forward, SetLocation, TurnRight, TurnLeft, Shift, Penup, Pendown, Rect, Circle, and Polygon. These commands provide the fundamental building blocks for creating a wide variety of shapes and patterns. With a basic understanding of geometry, users can effectively utilize these commands to produce complex drawings. Each command controls a specific aspect of the drawing process, whether it’s moving the pen, rotating it, or drawing geometric shapes.
+## Tech Stack
+* **Language:** F#
+* **Framework:** .NET
+* **Output Format:** SVG (Scalable Vector Graphics)
+* **Architecture:** Custom Parser and AST Evaluator utilizing functional state management.
 
-One of the most powerful features of ArtScript is the `repeat` function, which allows users to execute a series of commands multiple times. This feature significantly reduces the amount of code needed to create intricate designs and patterns. By leveraging the `repeat` function, users can easily produce complex and repetitive shapes with minimal effort. Overall, ArtScript combines mathematical accuracy with a user-friendly set of commands, making it an ideal tool for creating detailed and precise drawings programmatically.
+## Setup Steps
+To run an ArtScript program, ensure you have the .NET SDK installed. Navigate to the project directory and use `dotnet run`, passing the text file containing your ArtScript code as an argument.
 
-## Formal Syntax
+```bash
+cd code/ArtScript
+dotnet run examples/rect.txt > rect.svg
+```
+This evaluates the commands in the text file and outputs the generated image in SVG format. There are various example inputs provided in the `code/ArtScript/examples` folder.
+
+## Notes and Trade-offs
+
+### Formal Syntax & Semantics
+Our primary primitives are commands executed in order. The main combining form is an expression (`expr`), which is a list of commands including the repeat function. 
 
 ```text
 <expr> ::= <command> <expr> | <command> | <expr> <repeat> <expr> | <empty>
@@ -24,107 +38,40 @@ One of the most powerful features of ArtScript is the `repeat` function, which a
 <color> ::= red | green | blue | purple | black | yellow | gold | white | pink | brown | orange | RGB( <n> <n> <n>) | none
 <num_pair> ::= <n> <n>
 <command> ::= <command> <expr> | <command> | <empty>
-            | go <n> <color>
-            | setlocation <n> <n>
-            | toright
-            | toleft
-            | penup
-            | pendown
-            | shift <n> <direction>
-            | rect <n> <n> <color> <color>
-            | circle <n> <color> <color>
+            | go <n> <color> | setlocation <n> <n> | toright | toleft
+            | penup | pendown | shift <n> <direction>
+            | rect <n> <n> <color> <color> | circle <n> <color> <color>
             | poly <color> <color> <num_pair>*
-<n> ::= (any positive integer)
 ```
 
-## Semantics
-Our primary primitives are commands which can be executed in order. The combining form is an `expr` which is a list of commands including the repeat function. The commands themselves utilize numbers, colors, and directions; however, these can't be used outside of commands. The repeat element works by copying a given expression a specified number of times and adding it to the drawing list.
+### Extended Features vs. Scope
+The initial scope of the class project focused purely on static turtle-graphics commands. Post-submission, the language was independently extended to include dynamic features like variables (`set`), loops (`for`), grouped transformations (`rotate`, `scale`), and development helpers (`grid`). A trade-off of this functional expansion was migrating the purely static coordinate state into a dynamic environment map capable of scoping variables during AST evaluation.
 
-### Commands
-* **Forward (`go len color`)**: If the pen is down, draw a line from the current position in the current direction with the specified color. Update the pen's position based on the length and direction. If the pen is up, move the pen to the new position without drawing.
-* **SetLocation (`setlocation x y`)**: Move the pen to the specified `(x, y)` coordinates without drawing.
-* **TurnRight (`toright`)**: Change the pen's direction 90 degrees clockwise.
-* **TurnLeft (`toleft`)**: Change the pen's direction 90 degrees counterclockwise.
-* **Shift (`shift len dir`)**: Move the pen in the specified direction by the specified length without drawing.
-* **Penup (`penup`)**: Set the pen's state to up, preventing it from drawing when moved.
-* **Pendown (`pendown`)**: Set the pen's state to down, allowing it to draw when moved.
-* **Rect (`rect w l fill color`)**: Draw a rectangle at the current pen position with the specified width, height, fill color, and stroke color.
-* **Circle (`circle r fill color`)**: Draw a circle at the current pen position with the specified radius, fill color, and stroke color.
-* **Polygon (`poly fill color coords`)**: Draw a polygon with the specified fill color and stroke color using the provided list of coordinates.
+*For a detailed breakdown of the development journey, architecture, and these technical trade-offs, see the [Case Study](CASE_STUDY.md).*
 
-## Remaining Works (From Original Spec)
-At the time of submission for the collaborative class project, the following features were outlined as remaining works:
-* **Variables and Loops:** Adding variable assignment, standard `for` loops, and recursion trees.
-* **Text Support:** The ability to render text directly onto the canvas.
-* **Additional Shapes:** Support for drawing ellipses and other complex geometries.
-* **Transformations:** Functionality to mirror, rotate, and scale drawn shapes.
-* **Coordinate Helpers:** Quality-of-life tools to assist users in locating and designating exact coordinates on the canvas.
+---
 
-## Newly Added Features
-*Note: The items above were the original scope. Everything in 'Newly Added Features' below was implemented solely by me after the class submission.*
+### More Examples Showcase
 
-ArtScript has been expanded with several powerful new features:
-* **Variables and Loops:** Added variable assignment (`set`) and standard `for` loops for generative patterns.
-* **Text Support:** Added the ability to render text directly onto the canvas (`text`).
-* **Additional Shapes:** Added support for drawing ellipses (`ellipse`).
-* **Transformations:** Added block-level functionality to mirror, rotate, and scale drawn shapes (`rotate`, `scale`).
-* **Coordinate Helpers:** Added a `grid` tool to assist users in locating and designating exact coordinates on the canvas.
-
-## Examples and Running the Code
-
-There are example inputs provided in the `code/ArtScript/examples` folder in the repository.
-
-To run an ArtScript program, navigate to the project directory and use `dotnet run` passing the text file as an argument:
-```bash
-cd code/ArtScript
-dotnet run examples/rect.txt > rect.svg
-```
-This evaluates the commands in the text file and outputs the generated image in SVG format.
-
-## Example Outputs
-
-Here are some examples of what can be generated with ArtScript:
-
-**WCMA Artwork Recreation**
-
-![Josef Albers Artwork Recreation](docs/image.png)
-
-*A recreation of a Josef Albers artwork found at the Williams College Museum of Art (WCMA) using ArtScript.*
+<details>
+<summary>Click to view more ArtScript creations</summary>
 
 **Bunny**
-
 ![Bunny](docs/bunny.png)
 
 **Repeating Lines Pattern**
-
 ![Repeating Pattern](docs/repeating.png)
 
-**Rectangle**
-
-![Rectangle](docs/rect.png)
-
-**Circle**
-
-![Circle](docs/circle.png)
-
 **Variables and Loops**
-
 ![Loop Test](docs/loop_test.svg)
 
 **Text Support**
-
 ![Text Test](docs/text_test.svg)
 
-**Additional Shapes (Ellipse)**
-
-![Ellipse Test](docs/ellipse_test.svg)
-
-**Transformations**
-
-![Transform Test](docs/transform_test.svg)
-
 **Coordinate Helpers (Grid)**
-
 ![Grid Test](docs/grid_test.svg)
 
+**Transformations**
+![Transform Test](docs/transform_test.svg)
 
+</details>
