@@ -59,6 +59,27 @@ Our primary primitives are commands executed in order. The main combining form i
 ### Extended Features vs. Scope
 The initial scope of the class project focused purely on static turtle-graphics commands. Post-submission, the language was independently extended to include dynamic features like variables (`set`), loops (`for`), grouped transformations (`rotate`, `scale`), and development helpers (`grid`). A trade-off of this functional expansion was migrating the purely static coordinate state into a dynamic environment map capable of scoping variables during AST evaluation.
 
+**Extended Formal Syntax:**
+With the introduction of dynamic state, static numbers (`<n>`) in all base commands were upgraded to support fully evaluated arithmetic expressions (`<num_expr>`).
+
+```text
+<num_expr> ::= <n> | <var> 
+             | ( <num_expr> + <num_expr> )
+             | ( <num_expr> - <num_expr> )
+             | ( <num_expr> * <num_expr> )
+             | ( <num_expr> / <num_expr> )
+<var> ::= (any valid string identifier)
+<string> ::= "(any text)"
+
+<extended_command> ::= set <var> <num_expr>
+                     | for <var> <num_expr> <num_expr> ( <expr> )
+                     | rotate <num_expr> ( <expr> )
+                     | scale <num_expr> <num_expr> ( <expr> )
+                     | grid <num_expr>
+                     | text <string> <num_expr> <color>
+                     | ellipse <num_expr> <num_expr> <color> <color>
+```
+
 *For a detailed breakdown of the development journey, architecture, and these technical trade-offs, see the [Case Study](CASE_STUDY.md).*
 
 ---
